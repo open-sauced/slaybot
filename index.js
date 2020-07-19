@@ -1,7 +1,7 @@
 /* Config */
 const twitchTvHandle = "bdougieYO";
 const repoOwner = "open-sauced";
-const repoName = "open-sauced";
+const repoName = "open-saucedt";
 const PAUSE_DURATION = 30 * 1000; // 30 seconds
 const DISPLAY_DURATION = 10 * 1000; // 10 seconds
 
@@ -94,6 +94,7 @@ function Queue() {
     setTimeout(() => (isPaused = false), duration);
   };
 
+  // TODO: Not implemented. Need to not overwrite the container.
   this.isLooping = isLooping;
 }
 
