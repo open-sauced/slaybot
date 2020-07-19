@@ -1,4 +1,4 @@
-![beybot](https://user-images.githubusercontent.com/5713670/87865172-ad339300-c926-11ea-8c13-1dc03721439a.png)
+![beybot](https://user-images.githubusercontent.com/5713670/87865209-68f4c280-c927-11ea-85f6-adb28c811b1e.png)
 
 This is a twitch bot built on the [ComfyJS](https://github.com/instafluff/ComfyJS) (a wrapper around [tmi.js](https://github.com/tmijs/tmi.js)).
 
