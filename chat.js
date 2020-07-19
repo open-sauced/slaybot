@@ -1,12 +1,12 @@
 /* Config */
 const twitchTvHandle = "bdougieYO";
 const repoOwner = "open-sauced";
-const repoName = "open-saucedt";
+const repoName = "tweeps";
 const PAUSE_DURATION = 30 * 1000; // 30 seconds
 const DISPLAY_DURATION = 10 * 1000; // 10 seconds
 
 const queue = new Queue();
-const container = document.createElement("div");
+const container = document.querySelector(".gif");
 const img = new Image();
 
 /* OneGraph websocket subscriptions */
@@ -54,7 +54,12 @@ const removeLoginButton = () => {
   if (loginButton) {
     loginButton.remove();
   }
-}
+};
+
+// Resolve promise after duration
+const wait = async duration => {
+  return new Promise(resolve => setTimeout(resolve, duration));
+};
 
 // Loops and calls each function in a queue
 function Queue() {
@@ -94,11 +99,8 @@ function Queue() {
     setTimeout(() => (isPaused = false), duration);
   };
 
-  // TODO: Not implemented. Need to not overwrite the container.
   this.isLooping = isLooping;
 }
-
-;
 
 /* Sound Effects */
 const pewAudio = new Audio("horn.wav");
@@ -114,24 +116,15 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
   console.log(`!${command} was typed in chat`);
 
   if (command == "yo") {
-    queue.add(async () => {
-      new gifAlert(user, beyGif, pewAudio, command);
-      await setTimeout(removeGif, DISPLAY_DURATION);
-    });
+    new gifAlert(user, beyGif, pewAudio, command);
   }
 
   if (command == "welcome") {
-    queue.add(async () => {
-      new gifAlert(message, welcomeGif, magicChime, command);
-      await setTimeout(removeGif, DISPLAY_DURATION);
-    });
+    new gifAlert(message, welcomeGif, magicChime, command);
   }
 
   if (flags.broadcaster && command == "pizza") {
-    queue.add(async () => {
-      new gifAlert(message, pizzaGif, magicChime, command);
-      await setTimeout(removeGif, DISPLAY_DURATION);
-    });
+    new gifAlert(message, pizzaGif, magicChime, command);
   }
 
   if (flags.broadcaster && command == "pause") {
@@ -149,31 +142,25 @@ const generateTitle = {
   yo: " is hype!",
   welcome: " needs a welcome!",
   pizza: " needed a pizza party!",
-  starred: " starred us, like we knew they would!",
+  starred: ` starred ${repoName}, like we knew they would!`,
 };
 
 function gifAlert(user, gif, audio, type) {
-  removeGif(); // ensure that any previous gif is removed
+  queue.add(async () => {
+    audio.play();
+    container.innerHTML = `
+      <h1 class="text-shadows">${user + generateTitle[type]}</h1>
+      <img src="${gif}" />
+    `;
+    container.style.opacity = 1;
 
-  img.src = gif;
+    await wait(DISPLAY_DURATION);
 
-  const title = document.createElement("h1");
-  title.innerHTML = user + generateTitle[type];
-  title.classList.add("text-shadows");
+    if (!queue.isLooping) {
+      container.style.opacity = 0;
+    }
 
-  const content = document.getElementById("content");
-  content.appendChild(title);
-
-  container.appendChild(img);
-  content.appendChild(container);
-  audio.play();
-}
-
-function removeGif() {
-  const contentElement = document.getElementById("content");
-  if (contentElement.firstElementChild) {
-    contentElement.firstElementChild.remove();
-  }
+  });
 }
 
 const startGitHubSubscription = async (auth, client, repoOwner, repoName) => {
@@ -226,7 +213,6 @@ const startGitHubSubscription = async (auth, client, repoOwner, repoName) => {
         console.log(message);
 
         new gifAlert(login, pizzaGif, magicChime, "starred");
-        setTimeout(removeGif, DISPLAY_DURATION);
       },
       error => console.error(error),
       () => console.log("done"),
