@@ -1,7 +1,13 @@
 /* Config */
 const twitchTvHandle = "bdougieYO";
-const repoOwner = "sgrove";
-const repoName = "blog";
+const repoOwner = "open-sauced";
+const repoName = "open-sauced";
+const PAUSE_DURATION = 30 * 1000; // 30 seconds
+const DISPLAY_DURATION = 10 * 1000; // 10 seconds
+
+const queue = new Queue();
+const container = document.createElement("div");
+const img = new Image();
 
 /* OneGraph websocket subscriptions */
 const OneGraphSubscriptionPackage = window["onegraph-subscription-client"];
@@ -14,7 +20,7 @@ const ONEGRAPH_APP_ID = "e2ce0bcc-b5b6-42b7-a28e-3a6579d69ecd";
 const auth = new OneGraphAuth({
   appId: ONEGRAPH_APP_ID,
 });
-const client = new SubscriptionClient(ONEGRAPH_APP_ID, { oneGraphAuth: auth });
+const client = new SubscriptionClient(ONEGRAPH_APP_ID, {oneGraphAuth: auth});
 
 window.appId = ONEGRAPH_APP_ID;
 window.auth = auth;
@@ -48,7 +54,50 @@ const removeLoginButton = () => {
   if (loginButton) {
     loginButton.remove();
   }
-};
+}
+
+// Loops and calls each function in a queue
+function Queue() {
+  let queue = [];
+  let isLooping = false;
+  let isPaused = false;
+
+  this.loop = async () => {
+    isLooping = true;
+
+    const item = queue[0];
+    queue.shift();
+    await item();
+
+    if (!queue.length || isPaused) {
+      isLooping = false;
+      return;
+    }
+
+    this.loop();
+  };
+
+  this.add = item => {
+    if (isPaused) return;
+
+    queue.push(item);
+
+    if (!isLooping) this.loop();
+  };
+
+  this.clear = () => {
+    queue = [];
+  };
+
+  this.pause = (duration = 0) => {
+    isPaused = true;
+    setTimeout(() => (isPaused = false), duration);
+  };
+
+  this.isLooping = isLooping;
+}
+
+;
 
 /* Sound Effects */
 const pewAudio = new Audio("horn.wav");
@@ -61,26 +110,33 @@ const pizzaGif = "https://media.giphy.com/media/3o6nUXaNE4wdhq8Foc/giphy.gif";
 
 ComfyJS.Init(twitchTvHandle);
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
-  if (flags.broadcaster && command == "test") {
-    console.log("!test was typed in chat");
-  }
+  console.log(`!${command} was typed in chat`);
 
   if (command == "yo") {
-    console.log("!yo was typed in chat");
-    new gifAlert(user, beyGif, pewAudio, command);
-    setTimeout(removeGif, 5000);
+    queue.add(async () => {
+      new gifAlert(user, beyGif, pewAudio, command);
+      await setTimeout(removeGif, DISPLAY_DURATION);
+    });
   }
 
   if (command == "welcome") {
-    console.log("!welcome was typed in the chat");
-    new gifAlert(message, welcomeGif, magicChime, command);
-    setTimeout(removeGif, 5000);
+    queue.add(async () => {
+      new gifAlert(message, welcomeGif, magicChime, command);
+      await setTimeout(removeGif, DISPLAY_DURATION);
+    });
   }
 
   if (flags.broadcaster && command == "pizza") {
-    console.log("!pizza was typed in chat");
-    new gifAlert(message, pizzaGif, magicChime, command);
-    setTimeout(removeGif, 5000);
+    queue.add(async () => {
+      new gifAlert(message, pizzaGif, magicChime, command);
+      await setTimeout(removeGif, DISPLAY_DURATION);
+    });
+  }
+
+  if (flags.broadcaster && command == "pause") {
+    // Clear GIF queue and pause for PAUSE_DURATION
+    queue.clear();
+    queue.pause(PAUSE_DURATION);
   }
 };
 
@@ -98,14 +154,11 @@ const generateTitle = {
 function gifAlert(user, gif, audio, type) {
   removeGif(); // ensure that any previous gif is removed
 
-  const container = document.createElement("div");
-
-  const img = new Image();
   img.src = gif;
 
   const title = document.createElement("h1");
   title.innerHTML = user + generateTitle[type];
-  title.classList.add("text-shadows")
+  title.classList.add("text-shadows");
 
   const content = document.getElementById("content");
   content.appendChild(title);
@@ -113,7 +166,6 @@ function gifAlert(user, gif, audio, type) {
   container.appendChild(img);
   content.appendChild(container);
   audio.play();
-  setTimeout(removeGif, 5000);
 }
 
 function removeGif() {
@@ -153,7 +205,7 @@ const startGitHubSubscription = async (auth, client, repoOwner, repoName) => {
       operationName: "OnStarEvent",
     })
     .subscribe(
-      (next) => {
+      next => {
         const action = next.data.github.starEvent.action;
         const sender = next.data.github.starEvent.sender;
         const repo = next.data.github.starEvent.repository;
@@ -173,10 +225,10 @@ const startGitHubSubscription = async (auth, client, repoOwner, repoName) => {
         console.log(message);
 
         new gifAlert(login, pizzaGif, magicChime, "starred");
-        setTimeout(removeGif, 5000);
+        setTimeout(removeGif, DISPLAY_DURATION);
       },
-      (error) => console.error(error),
-      () => console.log("done")
+      error => console.error(error),
+      () => console.log("done"),
     );
 };
 
