@@ -7,7 +7,7 @@ const OneGraphAuthPackage = window["onegraph-auth"];
 const SubscriptionClient = OneGraphSubscriptionPackage.SubscriptionClient;
 const OneGraphAuth = OneGraphAuthPackage.OneGraphAuth;
 
-const ONEGRAPH_APP_ID = "e2ce0bcc-b5b6-42b7-a28e-3a6579d69ecd";
+const ONEGRAPH_APP_ID = "1c60a33a-c861-4219-9c46-cad179a2cafc";
 const auth = new OneGraphAuth({
   appId: ONEGRAPH_APP_ID,
 });
