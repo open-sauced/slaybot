@@ -1,4 +1,6 @@
-![beybot](https://user-images.githubusercontent.com/5713670/87865209-68f4c280-c927-11ea-85f6-adb28c811b1e.png)
+_This is a WIP chat bot for Twitch. I am still figuring out the kinks. Considering the content and the code in this repo to  unstable. If you would like a chatbot that works out of the box, try [open-sauced/beybot](https://github.com/open-sauced/beybot) instead._
+
+![slaybot](https://user-images.githubusercontent.com/5713670/87865209-68f4c280-c927-11ea-85f6-adb28c811b1e.png)
 
 This is a twitch bot built on the [ComfyJS](https://github.com/instafluff/ComfyJS) (a wrapper around [tmi.js](https://github.com/tmijs/tmi.js)).
 
@@ -15,11 +17,11 @@ When you set up an out of the box alert or chat system, like [Streamlabs](https:
 
 If you are looking to code live on stream, you probably have these skills to make chat alerts.
 
-## The happy path with ComfyJS
+## ComfyJS
 
-ComfyJS is maintained by [Instafluff](https://www.twitch.tv/instafluff), which you should give a follow for comfiest live code stream on Twitch.
+Comfy.JS lets you integrate with Twitch chat for your Twitch channel SUPER EASILY in just a few lines of code. Here's a quick 3-min video on how to use it: (Click image to open video)
 
-Everything you need to make a bot run lives in my open-sauced/beybot repo, linked below. This chatbot template contains no JavaScript framework code in the hopes that anyone live coding stream could apply their own desired flavor to it. If you are interested, I would love to see a post where someones take this bot to the next level with Vue, React, or even Svelte.
+[![ComfyJS How-To Video](https://img.youtube.com/vi/oXpPwnUQCCk/hqdefault.jpg)](https://www.youtube.com/watch?v=oXpPwnUQCCk)
 
 If you would like to see this chat command working live on the air here is a clip of me interacting with the basic `!yo` command.
 
@@ -39,15 +41,13 @@ If you do not have a Twitch account but would like to test this out, you can tes
 
 [![bdougie twitch account](https://user-images.githubusercontent.com/20134767/86605791-016c6980-bf5c-11ea-8250-2c03bb1f3318.png)](https://www.twitch.tv/bdougieyo)
 
-**Step 2: Deploy using GitHub Pages**
+**Step 2: Running the chatbot locally**
+After forking this repo, you will need to clone it locally to connect to your own [OneGraph](https://www.onegraph.com/) app. 
 
-If you are unfamiliar, GitHub provides a low effort way for you to host simple HTML files as a webpage using their github.io domain. You will need to go to your repo settings to set up a GitHub Page for your forked repo. You can learn more about GitHub Pages at pages.github.com.
-
-![](https://paper-attachments.dropbox.com/s_202334A481577855209C92DA29E80CC6349876B8BAA86FB00EF2859B2EC0BDD6_1594016982976_Screenshot+2020-07-05+23.27.44.png)
-
-Your set up for GitHub Pages should like the above and provide a ✅ when ready to view. If this site requires more to build than a single HTML file, you could also check the deploy environments page to check the status of the deploy. These settings are found on the sidebar of your repo's home page.
-
-![](https://paper-attachments.dropbox.com/s_202334A481577855209C92DA29E80CC6349876B8BAA86FB00EF2859B2EC0BDD6_1594017161655_Screenshot+2020-07-05+23.31.52.png)
+- Log into OneGraph and select **Create new app**
+- Add localhost:8080 to the **CORS Origins**
+- Copy and replace the **app's id** and replace it in the ONEGRAPH_APP_ID.
+- Run the serve using `snowpack dev`
 
 _When viewing the live site, it will be blank. You can open the web console and see the commands printed there, but keep in mind that the page has intentionally left blank to hide and show the Beyonceé gifs._
 
