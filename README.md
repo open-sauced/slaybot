@@ -15,11 +15,11 @@ When you set up an out of the box alert or chat system, like [Streamlabs](https:
 
 If you are looking to code live on stream, you probably have these skills to make chat alerts.
 
-## The happy path with ComfyJS
+## ComfyJS
 
-ComfyJS is maintained by [Instafluff](https://www.twitch.tv/instafluff), which you should give a follow for comfiest live code stream on Twitch.
+Comfy.JS lets you integrate with Twitch chat for your Twitch channel SUPER EASILY in just a few lines of code. Here's a quick 3-min video on how to use it: (Click image to open video)
 
-Everything you need to make a bot run lives in my open-sauced/beybot repo, linked below. This chatbot template contains no JavaScript framework code in the hopes that anyone live coding stream could apply their own desired flavor to it. If you are interested, I would love to see a post where someones take this bot to the next level with Vue, React, or even Svelte.
+[![ComfyJS How-To Video](https://img.youtube.com/vi/oXpPwnUQCCk/hqdefault.jpg)](https://www.youtube.com/watch?v=oXpPwnUQCCk)
 
 If you would like to see this chat command working live on the air here is a clip of me interacting with the basic `!yo` command.
 
