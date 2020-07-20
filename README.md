@@ -41,7 +41,7 @@ If you do not have a Twitch account but would like to test this out, you can tes
 
 [![bdougie twitch account](https://user-images.githubusercontent.com/20134767/86605791-016c6980-bf5c-11ea-8250-2c03bb1f3318.png)](https://www.twitch.tv/bdougieyo)
 
-**Step 2: Running the chatbot locally**
+**(WIP) Step 2: Running the chatbot locally**
 After forking this repo, you will need to clone it locally to connect to your own [OneGraph](https://www.onegraph.com/) app. 
 
 - Log into OneGraph and select **Create new app**
