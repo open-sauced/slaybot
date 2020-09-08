@@ -19,6 +19,10 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     new gifAlert(message, pizzaGif, magicChime, command);
   }
 
+  if (command == "flex") {
+    new gifAlert(message, bdougie, flexPhrase, command);
+  }
+
   if (flags.broadcaster && command == "pause") {
     // Clear GIF queue and pause for PAUSE_DURATION
     queue.clear();
