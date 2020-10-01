@@ -55,6 +55,15 @@ function gifAlert(user, gif, audio, type) {
     if (!queue.isLooping) {
       container.style.opacity = 0;
     }
-
   });
 }
+
+let socket = new WebSocket(`wss://${location.host}/socket`);
+socket.onopen = function (e) {
+  console.log("connection has been established");
+};
+
+socket.onmessage = function (e) {
+  console.log(`I received the message: ${e.data}`);
+  new gifAlert(message, bdougie, flexPhrase, command);
+};

@@ -1,122 +1,57 @@
-const queue = new Queue();
+require('dotenv').config()
+const WebSocket = require('ws');
+const express = require('express');
 
-/* OneGraph websocket subscriptions */
-const OneGraphSubscriptionPackage = window["onegraph-subscription-client"];
-const OneGraphAuthPackage = window["onegraph-auth"];
+// install with: npm install @octokit/webhooks
+const { Webhooks } = require("@octokit/webhooks");
 
-const SubscriptionClient = OneGraphSubscriptionPackage.SubscriptionClient;
-const OneGraphAuth = OneGraphAuthPackage.OneGraphAuth;
-
-const ONEGRAPH_APP_ID = "1c60a33a-c861-4219-9c46-cad179a2cafc";
-const auth = new OneGraphAuth({
-  appId: ONEGRAPH_APP_ID,
+// setup the webhooks
+const webhooks = new Webhooks({
+  secret: process.env.WEBHOOK_SECRET,
 });
-const client = new SubscriptionClient(ONEGRAPH_APP_ID, {oneGraphAuth: auth});
 
-window.appId = ONEGRAPH_APP_ID;
-window.auth = auth;
-window.client = client;
-
-const checkLogin = async (auth, service, onLogin) => {
-  try {
-    console.log("Checking if already logged into GitHub...");
-    let isLoggedIn = await auth.isLoggedIn("github");
-
-    if (isLoggedIn) {
-      return onLogin();
-    }
-
-    console.log("Not logged in, starting auth flow...");
-
-    await auth.login("github");
-    isLoggedIn = await auth.isLoggedIn("github");
-    if (!isLoggedIn) {
-      console.debug("Did not grant auth for GitHub");
-      return;
-    }
-    onLogin();
-  } catch (e) {
-    console.error("Error checking login: ", e);
-  }
-};
-
-const removeLoginButton = () => {
-  const loginButton = document.querySelector("#github-login");
-  if (loginButton) {
-    loginButton.remove();
-  }
-};
-
-const startGitHubSubscription = async (auth, client, repoOwner, repoName) => {
-  client
-    .request({
-      query: `subscription OnStarEvent(
-  $repoName: String!
-  $repoOwner: String!
-) {
-  github {
-    starEvent(
-      input: { repoOwner: $repoOwner, repoName: $repoName }
-    ) {
-      action
-      sender {
-        login
-      }
-      repository {
-        stargazers {
-          totalCount
-        }
-      }
-    }
-  }
-}`,
-      variables: {
-        repoOwner: repoOwner,
-        repoName: repoName,
-      },
-      operationName: "OnStarEvent",
+webhooks.on("*", ({ id, name, payload }) => {
+  const output = name + " event received"
+  console.log(output);
+  // message = output;
+  
+  // broadcast the message to all of the connected clients
+  // wss is a server that contains clients which are an array
+  // of all of the websocket connections
+  if(wss && wss.clients) {
+    wss.clients.forEach(client => {
+      client.send(output)
     })
-    .subscribe(
-      next => {
-        const action = next.data.github.starEvent.action;
-        const sender = next.data.github.starEvent.sender;
-        const repo = next.data.github.starEvent.repository;
-        const login = sender.login;
-        const totalCount = repo.stargazers.totalCount;
+  }
+});
 
-        /* 'DELETED' means unstarred, 'CREATED' means starred */
-        const newStar = action === "CREATED";
+webhooks.on("error", (error) => {
+  console.log(`Error occured in "${error.event.name} handler: ${error.stack}"`);
+});
 
-        if (!newStar) {
-          const message = `${login} just unstarred ${repoOwner}/${repoName} - down to ${totalCount} stars!`;
-          console.log(message);
-          return;
-        }
+// setup express
+const app = express();
 
-        const message = `${login} just starred ${repoOwner}/${repoName} - up to ${totalCount} stars!`;
-        console.log(message);
+// add middleware to server the static files
+app.use(express.static('public'))
 
-        new gifAlert(login, pizzaGif, magicChime, "starred");
-      },
-      error => console.error(error),
-      () => console.log("done"),
-    );
-};
+// add middleware for the webhooks
+app.use(webhooks.middleware)
 
-const setup = async () => {
-  const loginButton = document.querySelector("#github-login");
+//initialize the server to be used by the websockets
+const server = app.listen(3000, () => console.log('Server started on port 3000'))
 
-  let start = () => {
-    checkLogin(auth, "github", () => {
-      loginButton.remove();
-      console.log("Logged into GitHub, starting subscriptions...");
-      startGitHubSubscription(auth, client, repoOwner, repoName);
+//add the WebSocket to the server
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+    //connection is up, let's add a simple simple event
+    ws.on('message', (message) => {
+        //log the received message and send it back to the client
+        console.log('received: %s', message);
+        ws.send(`Hello, you sent -> ${message}`);
     });
-  };
 
-  loginButton.addEventListener("click", start);
-  // Run start in case we're already logged in
-  start();
-};
-
-setup();
+    //send immediately a feedback to the incoming connection    
+    ws.send('Hi there, I am a WebSocket server');
+});
