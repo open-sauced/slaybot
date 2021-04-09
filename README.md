@@ -1,4 +1,4 @@
-_This is a WIP chat bot for Twitch. I am still figuring out the kinks. Considering the content and the code in this repo to  unstable. If you would like a chatbot that works out of the box, try [open-sauced/beybot](https://github.com/open-sauced/beybot) instead._
+_This is a WIP chat bot for Twitch. I am still figuring out the kinks. Considering the content and the code in this repo to  unstable. If you would like a chatbot that works out of the box, try [open-sauced/beybot](https://github.com/open-sauced/beybot) or [bdougie/git-twitch](https://github.com/bdougie/git-twitch) instead._
 
 ![slaybot](https://user-images.githubusercontent.com/5713670/87865209-68f4c280-c927-11ea-85f6-adb28c811b1e.png)
 
