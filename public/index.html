@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/comfy.js@latest/dist/comfy.min.js"></script>
+    </head>
+    <body>
+        <section class="alerts">
+            <div class="gif"></div>
+            <ul id="container" />
+        </section>
+    </body>
+    <script src="./queue.js"></script>
+    <script src="./gif.js"></script>
+    <script>
+      // add ?secure=true to the end of the url to use wss
+      const urlParams = new URLSearchParams(location.search);
+      const protocol = 
+        urlParams.has("secure") && urlParams.get('secure').toLowerCase() == 'true'
+        ? "wss" : "ws";
+
+      let socket = new WebSocket(`${protocol}://${location.host}/socket`)
+
+      socket.onopen = function(e) {
+          console.log(`${protocol} connection has been established`)
+      }
+
+      socket.onmessage = function(e) {
+          console.log(e.data)
+          const container = document.getElementById('container')
+          new gifAlert(e.data, bdougie, magicChime, "starred");
+      }
+    </script>
+</html>
