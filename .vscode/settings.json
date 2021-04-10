@@ -1,0 +1,8 @@
+{
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/3f2df60c-a527-498f-9bae-5d1788c01245/resourceGroups/bdougie/providers/Microsoft.Web/sites/slaybot",
+  "appService.deploySubpath": "."
+}
