@@ -1,6 +1,7 @@
 require('dotenv').config()
 const WebSocket = require('ws');
 const express = require('express');
+const PORT = process.env.PORT | 8080;
 
 // install with: npm install @octokit/webhooks
 const { Webhooks } = require("@octokit/webhooks");
@@ -39,7 +40,7 @@ app.use(express.static('public'))
 app.use(webhooks.middleware)
 
 //initialize the server to be used by the websockets
-const server = app.listen(8080, () => console.log('Server started on port 8080'))
+const server = app.listen(PORT, () => console.log('Server started on port'))
 
 //add the WebSocket to the server
 const wss = new WebSocket.Server({ server });
