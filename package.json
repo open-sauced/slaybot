@@ -2,7 +2,7 @@
   "name": "slaybot",
   "version": "1.0.0",
   "description": "![beybot](https://user-images.githubusercontent.com/5713670/87865209-68f4c280-c927-11ea-85f6-adb28c811b1e.png)",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
     "start:watch": "nodemon --watch index.js"
