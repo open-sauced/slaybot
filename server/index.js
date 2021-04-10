@@ -39,7 +39,7 @@ app.use(express.static('public'))
 app.use(webhooks.middleware)
 
 //initialize the server to be used by the websockets
-const server = app.listen(3000, () => console.log('Server started on port 3000'))
+const server = app.listen(8080, () => console.log('Server started on port 8080'))
 
 //add the WebSocket to the server
 const wss = new WebSocket.Server({ server });
