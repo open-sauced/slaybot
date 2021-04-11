@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'preview'
+      name: 'staging'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
@@ -59,6 +59,20 @@ jobs:
         app-name: 'slaybot'
         slot-name: 'staging'
         publish-profile: ${{ secrets.AZURE_STAGING_PROFILE }}
+        
+    - name: Comment on the PR
+      uses: actions/github-script@v3
+      env:
+        LINK: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `This PR has been deployed to Staging! ${ process.env.LINK }`
+          })
 
   deploy-to-production:
     if: github.event_name != 'pull_request'
