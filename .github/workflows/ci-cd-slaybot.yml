@@ -80,7 +80,7 @@ jobs:
     needs: build
     environment:
       name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}?secure=true
 
     steps:
     - name: Download artifact from build job
