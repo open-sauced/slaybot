@@ -58,7 +58,7 @@ jobs:
       with:
         app-name: 'slaybot'
         slot-name: 'staging'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_50c39f8bd8d64f34a6e16c058392e725 }}
+        publish-profile: ${{ secrets.AZURE_STAGING_PROFILE }}
 
   deploy-to-production:
     if: github.event_name != 'pull_request'
