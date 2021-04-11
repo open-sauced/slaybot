@@ -69,7 +69,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: ✌🏾 This PR has been deployed to Staging! ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+            body: This PR has been deployed to Staging! ${{ steps.deploy-to-webapp.outputs.webapp-url }}
           })
 
   deploy-to-production:
