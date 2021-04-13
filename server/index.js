@@ -39,8 +39,9 @@ app.use(express.static('client'))
 app.use(webhooks.middleware)
 
 //initialize the server to be used by the websockets
-app.set('port', process.env.PORT || 3000);
-const server = app.listen(app.get('port'), () => console.log('Server started on port'))
+const PORT = process.env.PORT || 3000
+app.set('port', PORT);
+const server = app.listen(app.get('port'), () => console.log(`Server started on port ${PORT}`))
 
 
 //add the WebSocket to the server
