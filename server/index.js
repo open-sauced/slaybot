@@ -33,14 +33,15 @@ webhooks.onError((error) => {
 const app = express();
 
 // add middleware to server the static files
-app.use(express.static('public'))
+app.use(express.static('client'))
 
 // add middleware for the webhooks
 app.use(webhooks.middleware)
 
 //initialize the server to be used by the websockets
-app.set('port', process.env.PORT || 3000);
-const server = app.listen(app.get('port'), () => console.log('Server started on port'))
+const PORT = process.env.PORT || 3000
+app.set('port', PORT);
+const server = app.listen(app.get('port'), () => console.log(`Server started on port ${PORT}`))
 
 
 //add the WebSocket to the server

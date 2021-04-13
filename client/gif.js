@@ -19,7 +19,8 @@ const queue = new Queue();
 const beyGif = "https://media.giphy.com/media/VxkNDa92gcsRq/giphy.gif";
 const welcomeGif = "https://media.giphy.com/media/l3V0doGbp2EDaLHJC/giphy.gif";
 const pizzaGif = "https://media.giphy.com/media/3o6nUXaNE4wdhq8Foc/giphy.gif";
-const bdougie = "https://media.giphy.com/media/LT1Pq74cXuNQxyUmLk/giphy.gif";
+const bdougie = "/images/bdougie1.gif";
+const heart = "/images/heart.gif";
 
 /* Sound Effects */
 const pewAudio = new Audio("audio/horn.wav");
@@ -75,7 +76,7 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
   console.log(user + ":", message);
 };
 
-// change these commands for personalisation of your channel.
+// change these commands for personalization of your channel.
 const generateTitle = {
   pizza: " needed a pizza party!",
   music: " stopped the music!",
@@ -100,10 +101,11 @@ function gifAlert(user, gif, audio, type,) {
   });
 }
 
+// This is because the starred event comes from a websocket and not a command
 const presentedGif = (user, type, gif) => type == 'starred' ? 
     `
-      <h1 class="text-shadows">${user + generateTitle[type]}</h1>
-      <img src="images/heart.gif" />
+      <h1 class="mona-big text-shadows">${user + generateTitle[type]}</h1>
+      <img src="${heart}" />
     ` :
 
     `
