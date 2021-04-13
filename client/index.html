@@ -9,6 +9,7 @@
         <section class="alerts">
             <div class="gif"></div>
             <ul id="container" />
+            <img src="images/heart.gif" /
         </section>
     </body>
     <script src="./queue.js"></script>
@@ -29,7 +30,7 @@
       socket.onmessage = function(e) {
           console.log(e.data)
           const container = document.getElementById('container')
-          new gifAlert(e.data, bdougie, magicChime, "starred");
+          new gifAlert(e.data, heart, magicChime, "starred");
       }
     </script>
 </html>
