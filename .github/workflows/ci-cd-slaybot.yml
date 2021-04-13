@@ -71,7 +71,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `This PR has been deployed to Staging! ${ process.env.LINK }`
+            body: `This deploy is ready to be previewed! ${ process.env.LINK }`
           })
 
   deploy-to-production:
