@@ -66,6 +66,11 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     window.speechSynthesis.speak(msg);
   }
 
+  if ((flags.broadcaster || flags.mod || flags.vips || flags.subscriber) && command == "say") {
+    var msg = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(msg);
+  }
+
   if (flags.broadcaster && command == "pizza") {
     new gifAlert(user, pizzaGif, magicChime, command);
   }
