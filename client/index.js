@@ -60,6 +60,16 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
   if (command == "flex") {
     new gifAlert(user, bdougie, flexPhrase, command);
   }
+  
+  if (command == "security") {
+    var msg = new SpeechSynthesisUtterance('Somebody call security');
+    window.speechSynthesis.speak(msg);
+  }
+
+  if ((flags.broadcaster || flags.mod || flags.vips || flags.subscriber) && command == "say") {
+    var msg = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(msg);
+  }
 
   if (flags.broadcaster && command == "pizza") {
     new gifAlert(user, pizzaGif, magicChime, command);
@@ -83,7 +93,6 @@ const generateTitle = {
   starred: ` starred ${repoName}!`,
   welcome: " needs a welcome!",
   yo: " is hype!",
-
 };
 
 // Need to fix the CSS here
