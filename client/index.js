@@ -66,16 +66,16 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     window.speechSynthesis.speak(msg);
   }
 
-  if ((flags.broadcaster || flags.mod || flags.vips || flags.subscriber) && command == "say") {
+  if ((flags.broadcaster || flags.mod || flags.subscriber) && command == "say") {
     var msg = new SpeechSynthesisUtterance(message);
     window.speechSynthesis.speak(msg);
   }
 
-  if (flags.broadcaster && command == "pizza") {
+  if ((flags.broadcaster || flags.mod || flags.subscriber) && command == "pizza") {
     new gifAlert(user, pizzaGif, magicChime, command);
   }
 
-  if (flags.broadcaster && command == "pause") {
+  if ((flags.broadcaster || flags.mod) && command == "pause") {
     // Clear GIF queue and pause for PAUSE_DURATION
     queue.clear();
     queue.pause(PAUSE_DURATION);
