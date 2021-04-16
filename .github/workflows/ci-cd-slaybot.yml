@@ -89,14 +89,15 @@ jobs:
             if (data.length === 0) {
               console.log("No comments found");
             }
-            
+          });  
+          
           github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: `This deploy is ready to be previewed! ${ process.env.LINK }`
           })
-
+   
   deploy-to-production:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
