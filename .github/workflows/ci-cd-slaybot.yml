@@ -67,7 +67,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          octokit
+          github
           .request(
             `GET /repos/${context.repo.owner}/${context.repo.repo}/issues/${context.issue.number}/comments`
           )
@@ -78,7 +78,7 @@ jobs:
               if (data[i].user.login === "github-actions[bot]" && data[i].body.includes("deploy is ready")) {
                 console.log("You found it")
 
-                octokit.rest.issues.deleteComment({
+                github.issues.deleteComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   comment_id: data[i].id,
