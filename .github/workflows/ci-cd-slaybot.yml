@@ -67,6 +67,29 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          octokit
+          .request(
+            `GET /repos/${context.repo.owner}/${context.repo.repo}/issues/${context.issue.number}/comments`
+          )
+          .then(({ data }) => {
+            console.log(data)
+
+            for (var i = 0; i < data.length; i++) { 
+              if (data[i].user.login === "github-actions[bot]" && data[i].body.includes("deploy is ready")) {
+                console.log("You found it")
+
+                octokit.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: data[i].id,
+                });
+              }
+            }
+
+            if (data.length === 0) {
+              console.log("No comments found");
+            }
+            
           github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
