@@ -67,13 +67,38 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          github
+          .request(
+            `GET /repos/${context.repo.owner}/${context.repo.repo}/issues/${context.issue.number}/comments`
+          )
+          .then(({ data }) => {
+            console.log(data)
+
+            for (var i = 0; i < data.length; i++) { 
+              if (data[i].user.login !== "github-actions[bot]") { continue; } // skip is not printed the a github-actions[bot]
+              if (data[i].body.includes("deploy is ready")) {
+                console.log("You found it")
+
+                github.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: data[i].id,
+                });
+              }
+            }
+
+            if (data.length === 0) {
+              console.log("No comments found");
+            }
+          });  
+          
           github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `This PR has been deployed to Staging! ${ process.env.LINK }`
+            body: `This deploy is ready to be previewed! ${ process.env.LINK }`
           })
-
+   
   deploy-to-production:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
