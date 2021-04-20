@@ -98,7 +98,7 @@ const generateTitle = {
 // Need to fix the CSS here
 function gifAlert(user, gif, audio, type,) {
   queue.add(async () => {
-    audio.play();
+//     audio.play();
     container.innerHTML = presentedGif(user, type, gif);
     container.style.opacity = 1;
 
