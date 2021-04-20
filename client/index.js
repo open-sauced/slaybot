@@ -3,7 +3,7 @@ const paramsString = window.location.search;
 const searchParams = new URLSearchParams(paramsString);
 
 /* Config */
-/* example: http://localhost:3000/?twitch=bdougieyo&owner=bdougie&repo=git-twitch */
+/* example: http://localhost:3000/?owner=bdougie&repo=git-twitch */
 const twitchTvHandle = searchParams.has("twitch") ? searchParams.get("twitch") : "bdougieYO";
 const repoOwner = searchParams.has("owner") ? searchParams.get("owner") : "bdougie";
 const repoName = searchParams.has("repo") ? searchParams.get("repo") : "bdougie/git-twitch";
@@ -36,6 +36,10 @@ ComfyJS.Init(twitchTvHandle);
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
   console.log(`!${command} was typed in chat`);
 
+  //////////
+  // Gifs //
+  //////////
+
   if (command == "yo") {
     new gifAlert(user, beyGif, pewAudio, command);
   }
@@ -43,7 +47,7 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
   if (command == "welcome") {
     new gifAlert(user, welcomeGif, magicChime, command);
   }
-  // Ok, ready!
+
   if(command == "music") {
     new gifAlert(user, beyGif, pewAudio, command);
     // Please don't stop the music
@@ -60,7 +64,11 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
   if (command == "flex") {
     new gifAlert(user, bdougie, flexPhrase, command);
   }
-  
+
+  //////////
+  // TTS ///
+  //////////
+
   if (command == "security") {
     var msg = new SpeechSynthesisUtterance('Somebody call security');
     window.speechSynthesis.speak(msg);
@@ -98,7 +106,7 @@ const generateTitle = {
 // Need to fix the CSS here
 function gifAlert(user, gif, audio, type,) {
   queue.add(async () => {
-    audio.play();
+    // audio.play();
     container.innerHTML = presentedGif(user, type, gif);
     container.style.opacity = 1;
 
