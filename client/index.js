@@ -61,6 +61,10 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     new gifAlert(user, bdougie, flexPhrase, command);
   }
   
+  if (command == "heart") {
+    new gifAlert(user, heart, magicChime, command);
+  }
+  
   if (command == "security") {
     var msg = new SpeechSynthesisUtterance('Somebody call security');
     window.speechSynthesis.speak(msg);
@@ -93,6 +97,7 @@ const generateTitle = {
   starred: ` starred ${repoName}!`,
   welcome: " needs a welcome!",
   yo: " is hype!",
+  heart: " This was deploy to staging!",
 };
 
 // Need to fix the CSS here
