@@ -66,7 +66,7 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     window.speechSynthesis.speak(msg);
   }
 
-  if ((flags.broadcaster || flags.mod || flags.subscriber) && command == "say") {
+  if ((flags.broadcaster || flags.mod || flags.subscriber || flags.vip) && command == "say") {
     var msg = new SpeechSynthesisUtterance(message);
     window.speechSynthesis.speak(msg);
   }
