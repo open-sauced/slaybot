@@ -75,7 +75,7 @@ jobs:
             console.log(data)
 
             for (var i = 0; i < data.length; i++) { 
-              if (data[i].user.login !== "github-actions[bot]") { continue; } // skip is not printed the a github-actions[bot]
+              if (data[i].user.login !== "github-actions[bot]") { continue; } // skip is not printed by the github-actions[bot]
               if (data[i].body.includes("deploy is ready")) {
                 console.log("You found it")
 
