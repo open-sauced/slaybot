@@ -15,21 +15,20 @@
     <script src="./index.js"></script>
     <script>
       // add ?secure=true to the end of the url to use wss
-      const urlParams = new URLSearchParams(location.search);
-      const protocol = 
-        urlParams.has("local") && urlParams.get('local').toLowerCase() == 'true'
-        ? "ws" : "wss";
-
-      let socket = new WebSocket(`${protocol}://${location.host}/socket`)
+      let socket = new WebSocket(`ws://localhost:8088/ws/twitch-events/`)
 
       socket.onopen = function(e) {
-          console.log(`${protocol} connection has been established`)
+          console.log(`connection has been established`)
       }
 
       socket.onmessage = function(e) {
-          console.log(e.data)
-          const container = document.getElementById('container')
-          new gifAlert(e.data, heart, magicChime, "starred");
+          const data = JSON.parse(e.data);
+          const {event_type} = data;
+          console.log(event_type)
+          if (event_type === "follow") {
+            // const container = document.getElementById('container')
+            new gifAlert(event_type, heart, magicChime, "starred");
+          }
       }
     </script>
 </html>
