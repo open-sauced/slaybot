@@ -66,7 +66,7 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
     window.speechSynthesis.speak(msg);
   }
 
-  if ((flags.broadcaster || flags.mod || flags.subscriber) && command == "say") {
+  if ((flags.broadcaster || flags.mod || flags.subscriber || flags.vip) && command == "say") {
     var msg = new SpeechSynthesisUtterance(message);
     window.speechSynthesis.speak(msg);
   }
@@ -98,7 +98,7 @@ const generateTitle = {
 // Need to fix the CSS here
 function gifAlert(user, gif, audio, type,) {
   queue.add(async () => {
-    audio.play();
+//     audio.play(); don't forget to turn back on.
     container.innerHTML = presentedGif(user, type, gif);
     container.style.opacity = 1;
 
