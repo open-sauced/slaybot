@@ -1,13 +1,12 @@
+name: Build and deploy Node.js app to Azure Web App - slaybot
+
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Always be Deploying
 
 on:
   push:
     branches:
       - main
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -15,92 +14,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Cache node_modules 📦
-      uses: actions/cache@v2.1.4
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - name: Set up Node.js version
-      uses: actions/setup-node@v1
-      with:
-        node-version: '14.x'
+      - uses: actions/checkout@v2
 
-    - name: npm install (no build or test)
-      run: |
-        npm install
+      - name: Set up Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
-      with:
-        name: node-app
-        path: .
-  
-  deploy-staging:
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'staging'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
 
-    steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v2
-      with:
-        name: node-app
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: node-app
+          path: .
 
-    - name: 'Deploy to Azure Web App'
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'slaybot'
-        slot-name: 'staging'
-        publish-profile: ${{ secrets.AZURE_STAGING_PROFILE }}
-        
-    - name: Comment on the PR
-      uses: actions/github-script@v3
-      env:
-        LINK: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          github
-          .request(
-            `GET /repos/${context.repo.owner}/${context.repo.repo}/issues/${context.issue.number}/comments`
-          )
-          .then(({ data }) => {
-            console.log(data)
-
-            for (var i = 0; i < data.length; i++) { 
-              if (data[i].user.login !== "github-actions[bot]") { continue; } // skip is not printed by the github-actions[bot]
-              if (data[i].body.includes("deploy is ready")) {
-                console.log("You found it")
-
-                github.issues.deleteComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: data[i].id,
-                });
-              }
-            }
-
-            if (data.length === 0) {
-              console.log("No comments found");
-            }
-          });  
-          
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `This deploy is ready to be previewed! ${ process.env.LINK }`
-          })
-   
-  deploy-to-production:
-    if: github.event_name != 'pull_request'
+  deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
@@ -108,19 +41,20 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v2
-      with:
-        name: node-app
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: node-app
 
-    - name: 'Deploy to Azure Web App'
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'slaybot'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_50c39f8bd8d64f34a6e16c058392e725 }}
-      
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'slaybot'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1234 }}
+          package: .
+          
   update_draft_release:
     name: 📝 Update release notes
     if: github.event_name == 'push'
